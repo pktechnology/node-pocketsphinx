@@ -9,12 +9,13 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
   var ps = new PocketSphinx({
-  	
+
   }, function(hypothesis, score, utterance_id) {
 	socket.emit('utterance', {hyp: hyp, utterance: utt, score:score});
   });
 
-
+  ps.addGrammarSearch("digits", __dirname + "/digits.gram");
+  ps.search = "digits";
 
   socket.on('audio', function(data) {
     ps.write(data);
