@@ -1,6 +1,6 @@
 {
   "name": "pocketsphinx",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Node binding for continuous voice recoginition through pocketsphinx.",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,10 @@
   "license": "LGPL",
   "gypfile": true,
   "dependencies": {
+    "segfault-handler": "~0.2.1"
+  },
+  "devDependencies": {
     "express": "~4.3.2",
     "socket.io": "~1.0.2",
-    "segfault-handler": "~0.2.1"
   }
 }

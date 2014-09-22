@@ -8,10 +8,13 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-	var ps = new PocketSphinx();
-	ps.on('utterance', function(hyp, utt, score) {
-		socket.emit('utterance', {hyp: hyp, utterance: utt, score:score});
-	});
+  var ps = new PocketSphinx({
+  	
+  }, function(hypothesis, score, utterance_id) {
+	socket.emit('utterance', {hyp: hyp, utterance: utt, score:score});
+  });
+
+
 
   socket.on('audio', function(data) {
     ps.write(data);
@@ -21,4 +24,3 @@ io.on('connection', function(socket){
 http.listen(3000, function(){
   console.log('listening on *:3000');
 });
-

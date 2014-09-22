@@ -1,37 +1,31 @@
-pocketsphinx
-============
+# PocketSphinx for Node.js
+**A Node.js Binding for PocketSphinx**
 
-A Pocket Sphinx binding for Node.JS, focusing on continuous recognition.
+This module aims to allow basic speech recognition on portable devices through the use of PocketSphinx. Much of its API is based on the [PocketSphinx WP Demo](https://github.com/cmusphinx/pocketsphinx-wp-demo) application and it aims to provide enough functionality for basic speech recognition tasks.
 
-Installing
-----------
+## Example
 
-pocketsphinx requires [CMU's Pocket Sphinx libraries](http://cmusphinx.sourceforge.net/). You can build and install it yourself, but I highly recommend just getting it from a package manager. For Mac OSX I highly recommend [homebrew](http://brew.sh/). It makes this a snap:
+```javascript
+var PocketSphinx = require('pocketsphinx');
 
-    brew install cmu-pocketsphinx
+var ps = new PocketSphinx({
+	hmm: '/file/path',
+	lm: '/file/path',
+	dict: '/file/path',
+	samprate: 16000,
+	nfft: 512
+}, function(err, hypothesis, score, utterance_id) {
 
-Usage
------
+});
 
-A `PocketSphinx` object is a writable stream that accepts mono 16 kHz 16-bit PCM data. When an utterance is detected, e.g. a phrase, word, or statement, the object emits an `utterance` event with the details of the detected utterance.
+ps.addKeyphraseSearch("keyphrase_name", "keyphrase");
+ps.addKeywordSearch("keyword_name", "/file/path");
+ps.addGrammarSearch("grammar_name", "/file/path");
+ps.addNgramSearch("ngram_name", "/file/path");
 
-    var PocketSphinx = require('pocketsphinx');
-    
-    var ps = new PocketSphinx();
-    
-    ps.on('utterance', function(hyp, utt, score) {
-		console.log( 'Guessed phrase: ' + hyp);
-		console.log( 'Confidence score: ' + score);
-		console.log( 'Unique utterance id: ' + utt);
-	});
-    
-    ps.write(myMicrophoneData);
-    
-Data can be retrieved from files, but the demo shows how to use getUserMedia and Socket.io to stream data from a web frontend. This is also a good demo of how to use getUserMedia for cool stuff, considering the documentation for it is a little sparse.
+ps.search = "keyphrase_name";
 
-Notes
------
-
-This is still in active development. It has only been tested on Mac OSX 10.9.2 with Pocket Sphinx installed using homebrew.
-
-
+ps.start();
+ps.write(data);
+ps.stop();
+```
