@@ -277,7 +277,7 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
   AsyncData* data = (AsyncData*)request->data;
 
   int16* downsampled = new int16(data->length);
-  for(int i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
+  for(size_t i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
   
   const char* uttid;
   int32 score;
@@ -293,6 +293,6 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
 void Recognizer::AsyncAfter(uv_work_t* request) {
   AsyncData* data = (AsyncData*)request->data;
   
-  Local<Value> argv[3] = { String::NewSymbol(hyp), NumberObject::New(score), String::NewSymbol(uttid) };
+  Local<Value> argv[3] = { String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
   data->instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
 }
