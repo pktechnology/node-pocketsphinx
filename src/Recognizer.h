@@ -8,15 +8,6 @@
 #include <sphinxbase/err.h>
 #include <sphinxbase/jsgf.h>
 
-typedef struct AsyncData {
-  Recognizer* instance;
-  float* data;
-  size_t length;
-  const char* uttid;
-  int32 score;
-  const char* hyp;
-} AsyncData;
-
 class Recognizer : public node::ObjectWrap
 {
 public:
@@ -49,5 +40,14 @@ private:
 	ps_decoder_t* ps;
 	v8::Persistent<v8::Function> callback;
 };
+
+typedef struct AsyncData {
+  Recognizer* instance;
+  float* data;
+  size_t length;
+  const char* uttid;
+  int32 score;
+  const char* hyp;
+} AsyncData;
 
 #endif
