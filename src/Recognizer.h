@@ -47,8 +47,7 @@ private:
 	static void AsyncAfter(uv_work_t* request);
 
 	ps_decoder_t* ps;
-	STATE state;
-	Persistent<Function> callback;
+	v8::Persistent<v8::Function> callback;
 };
 
 #endif
