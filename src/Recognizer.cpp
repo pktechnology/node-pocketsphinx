@@ -322,13 +322,13 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
     downsampled[i] = data[i] * 32768;
 
   node::Buffer *slowBuffer = node::Buffer::New(length);
-  memcpy(Buffer::Data(slowBuffer), downsampled, length * sizeof(int16));
+  memcpy(node::Buffer::Data(slowBuffer), downsampled, length * sizeof(int16));
 
 
   // Courtesy of http://sambro.is-super-awesome.com/2011/03/03/creating-a-proper-buffer-in-a-node-c-addon/
   Local<Object> globalObj = Context::GetCurrent()->Global();
   Local<Function> bufferConstructor = Local<Function>::Cast(globalObj->Get(String::New("Buffer")));
-  Handle<Value> constructorArgs[3] = { slowBuffer->handle_, v8::Integer::New(length), v8::Integer::New(0) };
+  Handle<Value> constructorArgs[3] = { slowBuffer->handle_, Integer::New(length), Integer::New(0) };
   Local<Object> actualBuffer = bufferConstructor->NewInstance(3, constructorArgs);
   return scope.Close(actualBuffer);
 }
