@@ -285,14 +285,14 @@ Handle<Value> Recognizer::WriteSync(const Arguments& args) {
   int16* data = (int16*) node::Buffer::Data(args[0]);
   size_t length = node::Buffer::Length(args[0]) / sizeof(int16);
 
-  if(ps_process_raw(data->instance->ps, data->data, data->length, FALSE, FALSE)) {
+  if(ps_process_raw(instance->ps, data, length, FALSE, FALSE)) {
     ThrowException(Exception::Error(String::NewSymbol("Failed to process audio data")));
     return scope.Close(args.This());
   }
 
   const char* uttid;
   int32 score;
-  const char* hyp = ps_get_hyp(data->instance->ps, &score, &uttid);
+  const char* hyp = ps_get_hyp(instance->ps, &score, &uttid);
 
   Handle<Value> argv[4] = { Undefined(), String::NewSymbol(hyp), NumberObject::New(score), String::NewSymbol(uttid) };
   instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
