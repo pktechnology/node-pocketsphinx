@@ -16,7 +16,8 @@ var server = http.Server(app),
 io.on('connection', function(socket) {
 	var sphinx = new PocketSphinx({
 
-	}, function(hypothesis, score, id) {
+	}, function(err, hypothesis, score, id) {
+		if(err) console.error(err);
 		socket.emit('utterance', { phrase: hypothesis, id: id, score: score });
 	});
 

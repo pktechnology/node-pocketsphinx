@@ -45,6 +45,7 @@ private:
 
 typedef struct AsyncData {
   Recognizer* instance;
+  v8::Handle<v8::Exception> exception;
   float* data;
   size_t length;
   const char* uttid;

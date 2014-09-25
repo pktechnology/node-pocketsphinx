@@ -246,7 +246,7 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
   }
 
   if(!node::Buffer::HasInstance(args[0])) {
-    Local<Value> argv[1] = { Exception::Error(String::New("Expected data to be a buffer")) };
+    Local<Value> argv[1] = { Exception::Error(String::NewSymbol("Expected data to be a buffer")) };
     instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
     return args.This();
   }
@@ -269,6 +269,12 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
 
   int16* downsampled = new int16[data->length];
   for(size_t i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
+
+  if(ps_process_raw(data->instance->ps, downsampled, NULL, -1)) {
+    data->exception = Exception::Error(String::NewSymbol("Failed to process audio data"));
+    delete [] downsampled;
+    return;
+  }
   
   const char* uttid;
   int32 score;
@@ -283,9 +289,14 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
 
 void Recognizer::AsyncAfter(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
-  
-  Local<Value> argv[3] = { String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
-  data->instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
+
+  if(data->exception) {
+    Local<Value> argv[1] = { data->exception };
+    data->instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
+  } else {
+    Local<Value> argv[4] = { Undefined(), String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
+    data->instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
+  }
 }
 
 Local<Value> Recognizer::Default(Local<Value> value, Local<Value> fallback) {
