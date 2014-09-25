@@ -23,6 +23,8 @@ io.on('connection', function(socket) {
 
 	sphinx.start();
 
+	socket.emit('ready');
+
 	socket.on('audio', function(data) {
 		console.log('Resampling Data');
 		var resampled = sphinx.fromFloat(data);
