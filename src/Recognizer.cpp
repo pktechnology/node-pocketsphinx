@@ -64,14 +64,14 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   Handle<Object> options = args[0]->ToObject();
   instance->callback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
-  v8::String::AsciiValue hmmValue(options->Get(String::NewSymbol("hmm")));
-  v8::String::AsciiValue lmValue(options->Get(String::NewSymbol("lm")));
-  v8::String::AsciiValue dictValue(options->Get(String::NewSymbol("dict")));
-  v8::String::AsciiValue samprateValue(options->Get(String::NewSymbol("samprate")));
-  v8::String::AsciiValue nfftValue(options->Get(String::NewSymbol("nfft")));
-  v8::String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
-  v8::String::AsciiValue logfnValue(options->Get(String::NewSymbol("logfn")));
-  v8::String::AsciiValue mmapValue(options->Get(String::NewSymbol("mmap")));
+  String::AsciiValue hmmValue(options->Get(String::NewSymbol("hmm")));
+  String::AsciiValue lmValue(options->Get(String::NewSymbol("lm")));
+  String::AsciiValue dictValue(options->Get(String::NewSymbol("dict")));
+  String::AsciiValue samprateValue(options->Get(String::NewSymbol("samprate")));
+  String::AsciiValue nfftValue(options->Get(String::NewSymbol("nfft")));
+  String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
+  String::AsciiValue logfnValue(options->Get(String::NewSymbol("logfn")));
+  String::AsciiValue mmapValue(options->Get(String::NewSymbol("mmap")));
 
   cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
     "-hmm", *hmmValue,
@@ -92,7 +92,7 @@ Handle<Value> Recognizer::New(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::AddKeyphraseSearch(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(args.Length() < 2) {
@@ -105,8 +105,8 @@ Handle<Value> Recognizer::AddKeyphraseSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = String::New(args[0]);
-  v8::String::AsciiValue keyphrase = String::New(args[1]);
+  String::AsciiValue name(args[0]);
+  String::AsciiValue keyphrase(args[1]);
 
   int result = ps_set_keyphrase(instance->ps, *name, *keyphrase);
   if(!result)
@@ -116,7 +116,7 @@ Handle<Value> Recognizer::AddKeyphraseSearch(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::AddKeywordSearch(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(args.Length() < 2) {
@@ -129,8 +129,8 @@ Handle<Value> Recognizer::AddKeywordSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = String::New(args[0]);
-  v8::String::AsciiValue file = String::New(args[1]);
+  String::AsciiValue name(args[0]);
+  String::AsciiValue file(args[1]);
 
   int result = ps_set_keyword(instance->ps, *name, *file);
   if(!result)
@@ -140,7 +140,7 @@ Handle<Value> Recognizer::AddKeywordSearch(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::AddGrammarSearch(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(args.Length() < 2) {
@@ -153,8 +153,8 @@ Handle<Value> Recognizer::AddGrammarSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = String::New(args[0]);
-  v8::String::AsciiValue file = String::New(args[1]);
+  String::AsciiValue name(args[0]);
+  String::AsciiValue file(args[1]);
 
   int result = ps_set_jsgf_file(instance->ps, *name, *file);
   if(!result)
@@ -164,7 +164,7 @@ Handle<Value> Recognizer::AddGrammarSearch(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(args.Length() < 2) {
@@ -177,8 +177,8 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = String::New(args[0]);
-  v8::String::AsciiValue file = String::New(args[1]);
+  String::AsciiValue name(args[0]);
+  String::AsciiValue file(args[1]);
 
   int result = ps_set_lm_file(instance->ps, *name, *file);
   if(!result)
@@ -188,19 +188,19 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::GetSearch(const Local<String> property, const AccessorInfo& info) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
-  v8::String::AsciiValue search = String::New(ps_get_search(instance->ps));
+  Local<Value> search = String::NewSymbol(ps_get_search(instance->ps));
 
   return scope.Close(search);
 }
 
 Handle<Value> Recognizer::SetSearch(Local<String> property, Local<Value> value, const AccessorInfo& info) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
-  v8::String::AsciiValue search = String::Cast(value);
+  String::AsciiValue search = String::Cast(value);
 
   ps_set_search(instance->ps, *search);
 
@@ -208,7 +208,7 @@ Handle<Value> Recognizer::SetSearch(Local<String> property, Local<Value> value, 
 }
 
 Handle<Value> Recognizer::Start(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_start_utt(instance->ps, NULL);
@@ -219,7 +219,7 @@ Handle<Value> Recognizer::Start(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::Stop(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_end_utt(instance->ps);
@@ -230,7 +230,7 @@ Handle<Value> Recognizer::Stop(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::Restart(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_start_utt(instance->ps, NULL);
@@ -245,7 +245,7 @@ Handle<Value> Recognizer::Restart(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::Write(const Arguments& args) {
-  v8::HandleScope scope;
+  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(!args.Length()) {
