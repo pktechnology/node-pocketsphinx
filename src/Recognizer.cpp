@@ -321,7 +321,7 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
   for(size_t i = 0; i < length; i++)
     downsampled[i] = data[i] * 32768;
 
-  Buffer *slowBuffer = Buffer::New(length);
+  node::Buffer *slowBuffer = node::Buffer::New(length);
   memcpy(Buffer::Data(slowBuffer), downsampled, length * sizeof(int16));
 
 
