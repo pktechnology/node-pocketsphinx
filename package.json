@@ -16,10 +16,10 @@
   "license": "LGPL",
   "gypfile": true,
   "dependencies": {
-    "segfault-handler": "~0.2.1"
+    "segfault-handler": "~0.2"
   },
   "devDependencies": {
-    "express": "~4.3.2",
-    "socket.io": "~1.0.2"
+    "express": "4.x",
+    "socket.io": "1.x"
   }
 }
