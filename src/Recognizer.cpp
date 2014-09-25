@@ -1,4 +1,3 @@
-#define BUILDING_NODE_EXTENSION
 #include <node.h>
 #include "Recognizer.h"
 
@@ -80,14 +79,14 @@ Handle<Value> Recognizer::New(const Arguments& args) {
     "-dict", *dictValue,
     "-samprate", *samprateValue,
     "-nfft", *nfftValue,
-    "-kws_threshold": *kws_thresholdValue,
+    "-kws_threshold", *kws_thresholdValue,
     "-logfn", *logfnValue,
-    "-mmap", *mmapValue
+    "-mmap", *mmapValue,
     NULL);
 
   instance->ps = ps_init(config);
 
-  instance.Wrap(args.This());
+  instance->Wrap(args.This());
 
   return args.This();
 }
@@ -97,21 +96,21 @@ Handle<Value> Recognizer::AddKeyphraseSearch(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(args.Length() < 2) {
-    ThrowException(Exception::TypeError(String::New("Incorrect number of arguments, expected name and keyphrase")));
+    ThrowException(Exception::TypeError(String::NewSymbol("Incorrect number of arguments, expected name and keyphrase")));
     return scope.Close(args.This());
   }
 
   if(!args[0]->IsString() || !args[1]->IsString()) {
-    ThrowException(Exception::TypeError(String::New("Expected both name and keyphrase to be strings")));
+    ThrowException(Exception::TypeError(String::NewSymbol("Expected both name and keyphrase to be strings")));
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = args[0];
-  v8::String::AsciiValue keyphrase = args[1];
+  v8::String::AsciiValue name = String::New(args[0]);
+  v8::String::AsciiValue keyphrase = String::New(args[1]);
 
   int result = ps_set_keyphrase(instance->ps, *name, *keyphrase);
   if(!result)
-    ThrowException(Exception::Error(String::New("Failed to add keyphrase search to recognizer")));
+    ThrowException(Exception::Error(String::NewSymbol("Failed to add keyphrase search to recognizer")));
 
   return scope.Close(args.This());
 }
@@ -130,8 +129,8 @@ Handle<Value> Recognizer::AddKeywordSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = args[0];
-  v8::String::AsciiValue file = args[1];
+  v8::String::AsciiValue name = String::New(args[0]);
+  v8::String::AsciiValue file = String::New(args[1]);
 
   int result = ps_set_keyword(instance->ps, *name, *file);
   if(!result)
@@ -154,8 +153,8 @@ Handle<Value> Recognizer::AddGrammarSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = args[0];
-  v8::String::AsciiValue file = args[1];
+  v8::String::AsciiValue name = String::New(args[0]);
+  v8::String::AsciiValue file = String::New(args[1]);
 
   int result = ps_set_jsgf_file(instance->ps, *name, *file);
   if(!result)
@@ -178,8 +177,8 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  v8::String::AsciiValue name = args[0];
-  v8::String::AsciiValue file = args[1];
+  v8::String::AsciiValue name = String::New(args[0]);
+  v8::String::AsciiValue file = String::New(args[1]);
 
   int result = ps_set_lm_file(instance->ps, *name, *file);
   if(!result)
