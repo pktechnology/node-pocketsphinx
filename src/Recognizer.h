@@ -37,6 +37,8 @@ private:
 	static void AsyncWorker(uv_work_t* request);
 	static void AsyncAfter(uv_work_t* request);
 
+	static v8::Local<v8::Value> Default(v8::Local<v8::Value> value, v8::Local<v8::Value> fallback);
+
 	ps_decoder_t* ps;
 	v8::Persistent<v8::Function> callback;
 };

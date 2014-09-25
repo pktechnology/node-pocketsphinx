@@ -64,11 +64,11 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   Handle<Object> options = args[0]->ToObject();
   instance->callback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
-  String::AsciiValue hmmValue(options->Get(String::NewSymbol("hmm")));
-  String::AsciiValue lmValue(options->Get(String::NewSymbol("lm")));
-  String::AsciiValue dictValue(options->Get(String::NewSymbol("dict")));
-  String::AsciiValue samprateValue(options->Get(String::NewSymbol("samprate")));
-  String::AsciiValue nfftValue(options->Get(String::NewSymbol("nfft")));
+  String::AsciiValue hmmValue(Default(options->Get(String::NewSymbol("hmm")), String::NewSymbol("/hmm/en_US/hub4wsj_sc_8k"));
+  String::AsciiValue lmValue(Default(options->Get(String::NewSymbol("lm")), String::NewSymbol("/lm/en_US/hub4.5000.DMP")));
+  String::AsciiValue dictValue(Default(options->Get(String::NewSymbol("dict")), String::NewSymbol("/lm/en_US/cmu07a.dic")));
+  String::AsciiValue samprateValue(Default(options->Get(String::NewSymbol("samprate")), String::NewSymbol("44100")));
+  String::AsciiValue nfftValue(Default(options->Get(String::NewSymbol("nfft")), String::NewSymbol("2048")));
   String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
   String::AsciiValue logfnValue(options->Get(String::NewSymbol("logfn")));
   String::AsciiValue mmapValue(options->Get(String::NewSymbol("mmap")));
@@ -79,9 +79,9 @@ Handle<Value> Recognizer::New(const Arguments& args) {
     "-dict", *dictValue,
     "-samprate", *samprateValue,
     "-nfft", *nfftValue,
-    "-kws_threshold", *kws_thresholdValue,
-    "-logfn", *logfnValue,
-    "-mmap", *mmapValue,
+    //"-kws_threshold", *kws_thresholdValue,
+    //"-logfn", *logfnValue,
+    //"-mmap", *mmapValue,
     NULL);
 
   instance->ps = ps_init(config);
@@ -292,4 +292,9 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
   
   Local<Value> argv[3] = { String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
   data->instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
+}
+
+Local<Value> Default(Local<Value> value, Local<Value> fallback) {
+  if(value.IsUndefined()) return fallback;
+  return value;
 }
