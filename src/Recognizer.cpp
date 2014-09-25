@@ -294,7 +294,7 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
   data->instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
 }
 
-Local<Value> Default(Local<Value> value, Local<Value> fallback) {
+Local<Value> Recognizer::Default(Local<Value> value, Local<Value> fallback) {
   if(value->IsUndefined()) return fallback;
   return value;
 }
