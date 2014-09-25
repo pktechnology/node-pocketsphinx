@@ -210,7 +210,7 @@ Handle<Value> Recognizer::Start(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_start_utt(instance->ps, NULL);
-  if(!result)
+  if(result)
     ThrowException(Exception::Error(String::New("Failed to start PocketSphinx processing")));
 
   return scope.Close(args.This());
@@ -221,7 +221,7 @@ Handle<Value> Recognizer::Stop(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_end_utt(instance->ps);
-  if(!result)
+  if(result)
     ThrowException(Exception::Error(String::New("Failed to end PocketSphinx processing")));
 
   return scope.Close(args.This());
@@ -232,11 +232,11 @@ Handle<Value> Recognizer::Restart(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_start_utt(instance->ps, NULL);
-  if(!result)
+  if(result)
     ThrowException(Exception::Error(String::New("Failed to start PocketSphinx processing")));
   
   result = ps_end_utt(instance->ps);
-  if(!result)
+  if(result)
     ThrowException(Exception::Error(String::New("Failed to restart PocketSphinx processing")));
 
   return scope.Close(args.This());
