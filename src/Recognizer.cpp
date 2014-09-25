@@ -1,5 +1,6 @@
 #include <node.h>
 #include "Recognizer.h"
+#include <stdio.h>
 
 using namespace v8;
 
@@ -70,7 +71,7 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   String::AsciiValue samprateValue(Default(options->Get(String::NewSymbol("samprate")), String::NewSymbol("44100")));
   String::AsciiValue nfftValue(Default(options->Get(String::NewSymbol("nfft")), String::NewSymbol("2048")));
   String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
-  String::AsciiValue logfnValue(options->Get(String::NewSymbol("logfn")));
+  String::AsciiValue logfnValue(Default(options->Get(String::NewSymbol("logfn")), String::NewSymbol("/dev/null")));
   String::AsciiValue mmapValue(options->Get(String::NewSymbol("mmap")));
 
   cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
@@ -187,6 +188,7 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
   return scope.Close(args.This());
 }
 
+
 Handle<Value> Recognizer::GetSearch(const Local<String> property, const AccessorInfo& info) {
   HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(info.This());
@@ -205,6 +207,7 @@ void Recognizer::SetSearch(Local<String> property, Local<Value> value, const Acc
   ps_set_search(instance->ps, *search);
 }
 
+
 Handle<Value> Recognizer::Start(const Arguments& args) {
   HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
@@ -212,6 +215,8 @@ Handle<Value> Recognizer::Start(const Arguments& args) {
   int result = ps_start_utt(instance->ps, NULL);
   if(result)
     ThrowException(Exception::Error(String::New("Failed to start PocketSphinx processing")));
+  else
+    printf("PocketSphinx listening started");
 
   return scope.Close(args.This());
 }
@@ -252,10 +257,11 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
   }
 
   if(!node::Buffer::HasInstance(args[0])) {
-    Local<Value> argv[1] = { Exception::Error(String::New("Expected data to be a buffer")) };
-    instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    ThrowException(Exception::TypeError(String::New("Expected data to be a buffer")));
     return scope.Close(args.This());
   }
+
+  printf("PocketSphinx got data");
 
   AsyncData* data = new AsyncData();
   data->instance = instance;
@@ -265,16 +271,23 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
   uv_work_t* req = new uv_work_t();
   req->data = data;
 
+  printf("PocketSphinx queueing work");
+
   uv_queue_work(uv_default_loop(), req, AsyncWorker, (uv_after_work_cb)AsyncAfter);
+
+  printf("PocketSphinx queued work");
 
   return scope.Close(args.This());
 }
 
 void Recognizer::AsyncWorker(uv_work_t* request) {
+  printf("PocketSphinx Worker Started");
   AsyncData* data = (AsyncData*)request->data;
 
+  printf("PocketSphinx Worker Downsampling");
   int16* downsampled = new int16(data->length);
   for(size_t i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
+  printf("PocketSphinx Worker Hypothesising");
   
   const char* uttid;
   int32 score;
@@ -284,14 +297,20 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
   data->uttid = uttid;
   data->hyp = hyp;
 
+  printf("PocketSphinx Worker Finished");
   delete downsampled;
 }
 
 void Recognizer::AsyncAfter(uv_work_t* request) {
+  printf("PocketSphinx Post Worker Started");
   AsyncData* data = (AsyncData*)request->data;
   
+  printf("PocketSphinx Post Worker Calling Done");
   Local<Value> argv[3] = { String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
   data->instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
+
+  printf("PocketSphinx Post Worker Finished");
+  delete data;
 }
 
 Local<Value> Recognizer::Default(Local<Value> value, Local<Value> fallback) {
