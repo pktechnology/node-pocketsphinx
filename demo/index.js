@@ -25,9 +25,9 @@ io.on('connection', function(socket) {
 
 	socket.on('audio', function(data) {
 		console.log('Resampling Data');
-		sphinx.fromFloat(data);
+		var resampled = sphinx.fromFloat(data);
 		console.log('Recognizing Data');
-		sphinx.write(data);
+		sphinx.write(resampled);
 	});
 
 	socket.on('restart', function() {

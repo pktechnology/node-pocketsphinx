@@ -301,7 +301,7 @@ Local<Value> Recognizer::Default(Local<Value> value, Local<Value> fallback) {
   return value;
 }
 
-void Recognizer::FromFloat(const Arguments& args) {
+Handle<Value> Recognizer::FromFloat(const Arguments& args) {
   HandleScope scope;
 
   if(!args.Length()) {
