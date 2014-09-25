@@ -321,5 +321,5 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
   for(size_t i = 0; i < length; i++)
     downsampled[i] = data[i] * 32768;
 
-  return scope.Close(node::Buffer::New(Isolate::GetCurrent(), (const char*)downsampled, length * sizeof(int16)));
+  return scope.Close(node::Buffer::New((const char*)downsampled, length * sizeof(int16)));
 }
