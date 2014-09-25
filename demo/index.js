@@ -1,27 +1,33 @@
-var PocketSphinx = require('../');
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var PocketSphinx = require('pocketsphinx'),
+	express = require('express'),
+	socket_io = require('socket.io'),
+	http = require('http');
 
-app.get('/', function(req, res){
-  res.sendfile('index.html');
+var app = express();
+app.get('/', function(req, res) { return res.sendFile('index.html'); });
+
+
+var server = http.Server(app),
+	io = socket_io(server);
+
+io.on('connection', function(socket) {
+	var sphinx = new PocketSpinx({
+
+	}, function(hypothesis, score, id) {
+		socket.emit('utterance', { phrase: hypothesis, id: id, score: score });
+	});
+
+	sphinx.start();
+
+	socket.on('audio', function(data) {
+		sphinx.write(data);
+	});
+
+	socket.on('restart', function() {
+		sphinx.restart();
+	});
 });
 
-io.on('connection', function(socket){
-  var ps = new PocketSphinx({
-
-  }, function(hypothesis, score, utterance_id) {
-	socket.emit('utterance', {hyp: hyp, utterance: utt, score:score});
-  });
-
-  ps.addGrammarSearch("digits", __dirname + "/digits.gram");
-  ps.search = "digits";
-
-  socket.on('audio', function(data) {
-    ps.write(data);
-  });
-});
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+server.listen(process.env.port || 3000, function() {
+	console.log('Listening on port %d', process.env.port || 3000);
 });
