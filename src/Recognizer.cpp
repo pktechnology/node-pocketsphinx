@@ -196,15 +196,13 @@ Handle<Value> Recognizer::GetSearch(const Local<String> property, const Accessor
   return scope.Close(search);
 }
 
-Handle<Value> Recognizer::SetSearch(Local<String> property, Local<Value> value, const AccessorInfo& info) {
+void Recognizer::SetSearch(Local<String> property, Local<Value> value, const AccessorInfo& info) {
   HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   String::AsciiValue search(value);
 
   ps_set_search(instance->ps, *search);
-
-  return scope.Close(Undefined());
 }
 
 Handle<Value> Recognizer::Start(const Arguments& args) {
