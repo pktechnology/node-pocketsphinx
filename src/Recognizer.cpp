@@ -267,7 +267,7 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
 void Recognizer::AsyncWorker(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
 
-  int16* downsampled = new int16(data->length);
+  int16* downsampled = new int16[data->length];
   for(size_t i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
   
   const char* uttid;
