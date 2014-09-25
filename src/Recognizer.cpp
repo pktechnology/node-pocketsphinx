@@ -306,13 +306,12 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
 
   if(!args.Length()) {
     ThrowException(Exception::TypeError(String::NewSymbol("Expected a data buffer to be provided")));
-    return args.This();
+    return scope.Close(args.This());
   }
 
   if(!node::Buffer::HasInstance(args[0])) {
-    Local<Value> argv[1] = { Exception::Error(String::NewSymbol("Expected data to be a buffer")) };
-    instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
-    return args.This();
+    ThrowException(Exception::Error(String::NewSymbol("Expected data to be a buffer"))); argv);
+    return scope.Close(args.This());
   }
 
   float* data = node::Buffer::Data(args[0]);
