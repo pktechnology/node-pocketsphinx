@@ -4,7 +4,9 @@ var PocketSphinx = require('../'),
 	http = require('http');
 
 var app = express();
-app.get('/', function(req, res) { return (res.sendfile || res.sendFile)('index.html'); });
+app.use(express.static('public', {
+	index: true
+}));
 
 
 var server = http.Server(app),
