@@ -317,7 +317,7 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
   float* data = reinterpret_cast<float*>(node::Buffer::Data(args[0]));
   size_t length = node::Buffer::Length(args[0]) / sizeof(float);
 
-  node::Buffer *slowBuffer = node::Buffer::New(length);
+  node::Buffer *slowBuffer = node::Buffer::New(length * sizeof(int16));
   int16* slowBufferData = reinterpret_cast<int16*>(node::Buffer::Data(slowBuffer));
 
   for(size_t i = 0; i < length; i++)
