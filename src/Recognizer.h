@@ -33,6 +33,8 @@ private:
 	static v8::Handle<v8::Value> GetSearch(const v8::Local<v8::String> property, const v8::AccessorInfo& info);
 	static void SetSearch(v8::Local<v8::String> property, v8::Local<v8::Value> value, const v8::AccessorInfo& info);
 
+	static v8::Handle<v8::Value> FromFloat(const v8::Arguments& args);
+
 	static v8::Persistent<v8::Function> constructor;
 	static void AsyncWorker(uv_work_t* request);
 	static void AsyncAfter(uv_work_t* request);

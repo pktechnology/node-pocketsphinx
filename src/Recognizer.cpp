@@ -18,6 +18,8 @@ void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   tpl->SetClassName(String::NewSymbol("Recognizer"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
+  tpl->InstanceTemplate()->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
+
   tpl->PrototypeTemplate()->Set(String::NewSymbol("start"), FunctionTemplate::New(Start)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("stop"), FunctionTemplate::New(Stop)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("restart"), FunctionTemplate::New(Restart)->GetFunction());
@@ -253,8 +255,8 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
 
   AsyncData* data = new AsyncData();
   data->instance = instance;
-  data->data = (float*) node::Buffer::Data(args[0]);
-  data->length = node::Buffer::Length(args[0]) / sizeof(float);
+  data->data = (int16*) node::Buffer::Data(args[0]);
+  data->length = node::Buffer::Length(args[0]) / sizeof(int16);
 
   uv_work_t* req = new uv_work_t();
   req->data = data;
@@ -267,13 +269,9 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
 void Recognizer::AsyncWorker(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
 
-  int16* downsampled = new int16[data->length];
-  for(size_t i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
-
-  if(ps_process_raw(data->instance->ps, downsampled, data->length, FALSE, FALSE)) {
+  if(ps_process_raw(data->instance->ps, data->length, data->length, FALSE, FALSE)) {
     data->hasException = TRUE;
     data->exception = Exception::Error(String::NewSymbol("Failed to process audio data"));
-    delete [] downsampled;
     return;
   }
   
@@ -284,8 +282,6 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
   data->score = score;
   data->uttid = uttid;
   data->hyp = hyp;
-
-  delete [] downsampled;
 }
 
 void Recognizer::AsyncAfter(uv_work_t* request) {
@@ -303,4 +299,28 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
 Local<Value> Recognizer::Default(Local<Value> value, Local<Value> fallback) {
   if(value->IsUndefined()) return fallback;
   return value;
+}
+
+Handle<Value> Recognizer::FromFloat(const Arguments& args) {
+  HandleScope scope;
+
+  if(!args.Length()) {
+    ThrowException(Exception::TypeError(String::NewSymbol("Expected a data buffer to be provided")));
+    return args.This();
+  }
+
+  if(!node::Buffer::HasInstance(args[0])) {
+    Local<Value> argv[1] = { Exception::Error(String::NewSymbol("Expected data to be a buffer")) };
+    instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    return args.This();
+  }
+
+  float* data = node::Buffer::Data(args[0]);
+  size_t length = node::Buffer::Length(args[0]) / sizeof(float);
+  int16 downsampled = new int16[length];
+
+  for(size_t i = 0; i < length; i++)
+    downsampled[i] = data[i] * 32768;
+
+  return scope.Close(node::Buffer::New(downsampled));
 }
