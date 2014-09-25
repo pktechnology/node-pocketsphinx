@@ -70,7 +70,7 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   String::AsciiValue samprateValue(Default(options->Get(String::NewSymbol("samprate")), String::NewSymbol("44100")));
   String::AsciiValue nfftValue(Default(options->Get(String::NewSymbol("nfft")), String::NewSymbol("2048")));
   String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
-  String::AsciiValue logfnValue(options->Get(String::NewSymbol("logfn")));
+  String::AsciiValue logfnValue(Default(options->Get(String::NewSymbol("logfn")), String::NewSymbol("/dev/null")));
   String::AsciiValue mmapValue(options->Get(String::NewSymbol("mmap")));
 
   cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
