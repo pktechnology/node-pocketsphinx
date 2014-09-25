@@ -310,16 +310,16 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
   }
 
   if(!node::Buffer::HasInstance(args[0])) {
-    ThrowException(Exception::Error(String::NewSymbol("Expected data to be a buffer"))); argv);
+    ThrowException(Exception::Error(String::NewSymbol("Expected data to be a buffer")));
     return scope.Close(args.This());
   }
 
-  float* data = node::Buffer::Data(args[0]);
+  float* data = reinterpret_cast<float*>(node::Buffer::Data(args[0]));
   size_t length = node::Buffer::Length(args[0]) / sizeof(float);
   int16 downsampled = new int16[length];
 
   for(size_t i = 0; i < length; i++)
     downsampled[i] = data[i] * 32768;
 
-  return scope.Close(node::Buffer::New(downsampled));
+  return scope.Close(node::Buffer::New(Isolated::GetCurrent(), downsampled, length));
 }
