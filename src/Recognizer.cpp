@@ -295,6 +295,6 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
 }
 
 Local<Value> Default(Local<Value> value, Local<Value> fallback) {
-  if(value.IsUndefined()) return fallback;
+  if(value->IsUndefined()) return fallback;
   return value;
 }
