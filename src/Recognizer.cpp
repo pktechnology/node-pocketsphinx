@@ -14,12 +14,15 @@ Recognizer::~Recognizer() {
 }
 
 void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
-  Local<ObjectTemplate> masterTpl = ObjectTemplate::New();
-
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Recognizer"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
+  // Static Methods and Properties
+  tpl->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
+  tpl->Set(String::NewSymbol("modelDirectory"), String::NewSymbol(MODELDIR));
+
+  // Prototype Methods and Properies
   tpl->PrototypeTemplate()->Set(String::NewSymbol("start"), FunctionTemplate::New(Start)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("stop"), FunctionTemplate::New(Stop)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("restart"), FunctionTemplate::New(Restart)->GetFunction());
@@ -34,11 +37,7 @@ void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("write"), FunctionTemplate::New(Write)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("writeSync"), FunctionTemplate::New(WriteSync)->GetFunction());
 
-  masterTpl->SetCallAsFunctionHandler(tpl->GetFunction());
-  masterTpl->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
-  masterTpl->Set(String::NewSymbol("modelDirectory"), String::NewSymbol(MODELDIR));
-
-  constructor = Persistent<Object>::New(masterTpl->NewInstance());
+  constructor = Persistent<Function>::New(tpl->GetFunction());
   module->Set(String::NewSymbol("exports"), constructor);
 }
 
