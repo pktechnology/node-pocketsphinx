@@ -64,9 +64,9 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   Handle<Object> options = args[0]->ToObject();
   instance->callback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
-  String::AsciiValue hmmValue(Default(options->Get(String::NewSymbol("hmm")), String::NewSymbol("/hmm/en_US/hub4wsj_sc_8k")));
-  String::AsciiValue lmValue(Default(options->Get(String::NewSymbol("lm")), String::NewSymbol("/lm/en_US/hub4.5000.DMP")));
-  String::AsciiValue dictValue(Default(options->Get(String::NewSymbol("dict")), String::NewSymbol("/lm/en_US/cmu07a.dic")));
+  String::AsciiValue hmmValue(Default(options->Get(String::NewSymbol("hmm")), String::NewSymbol(MODELDIR "/hmm/en_US/hub4wsj_sc_8k")));
+  String::AsciiValue lmValue(Default(options->Get(String::NewSymbol("lm")), String::NewSymbol(MODELDIR "/lm/en_US/hub4.5000.DMP")));
+  String::AsciiValue dictValue(Default(options->Get(String::NewSymbol("dict")), String::NewSymbol(MODELDIR "/lm/en_US/cmu07a.dic")));
   String::AsciiValue samprateValue(Default(options->Get(String::NewSymbol("samprate")), String::NewSymbol("44100")));
   String::AsciiValue nfftValue(Default(options->Get(String::NewSymbol("nfft")), String::NewSymbol("2048")));
   String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));

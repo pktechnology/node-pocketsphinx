@@ -2,7 +2,7 @@
   "targets": [
     {
       "target_name": "PocketSphinx",
-      "cflags": ["<!(pkg-config --cflags pocketsphinx sphinxbase)"],
+      "cflags": ["-DMODELDIR=\"<!(pkg-config --variable=modeldir pocketsphinx)\"", "<!(pkg-config --cflags pocketsphinx sphinxbase)"],
 	    "ldflags": ["<!(pkg-config --libs pocketsphinx sphinxbase)"],
 	    "xcode_settings": {
 	    	"OTHER_CFLAGS": ["<!(pkg-config --cflags pocketsphinx sphinxbase)"],
