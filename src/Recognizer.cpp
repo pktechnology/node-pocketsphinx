@@ -188,16 +188,14 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
 }
 
 Handle<Value> Recognizer::GetSearch(const Local<String> property, const AccessorInfo& info) {
-  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(info.This());
 
   Local<Value> search = String::NewSymbol(ps_get_search(instance->ps));
 
-  return scope.Close(search);
+  return search;
 }
 
 void Recognizer::SetSearch(Local<String> property, Local<Value> value, const AccessorInfo& info) {
-  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(info.This());
 
   String::AsciiValue search(value);
@@ -206,29 +204,26 @@ void Recognizer::SetSearch(Local<String> property, Local<Value> value, const Acc
 }
 
 Handle<Value> Recognizer::Start(const Arguments& args) {
-  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_start_utt(instance->ps, NULL);
   if(result)
     ThrowException(Exception::Error(String::New("Failed to start PocketSphinx processing")));
 
-  return scope.Close(args.This());
+  return args.This();
 }
 
 Handle<Value> Recognizer::Stop(const Arguments& args) {
-  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_end_utt(instance->ps);
   if(result)
     ThrowException(Exception::Error(String::New("Failed to end PocketSphinx processing")));
 
-  return scope.Close(args.This());
+  return args.This();
 }
 
 Handle<Value> Recognizer::Restart(const Arguments& args) {
-  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   int result = ps_start_utt(instance->ps, NULL);
@@ -239,11 +234,10 @@ Handle<Value> Recognizer::Restart(const Arguments& args) {
   if(result)
     ThrowException(Exception::Error(String::New("Failed to restart PocketSphinx processing")));
 
-  return scope.Close(args.This());
+  return args.This();
 }
 
 Handle<Value> Recognizer::Write(const Arguments& args) {
-  HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(!args.Length()) {
@@ -267,7 +261,7 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
 
   uv_queue_work(uv_default_loop(), req, AsyncWorker, (uv_after_work_cb)AsyncAfter);
 
-  return scope.Close(args.This());
+  return args.This();
 }
 
 void Recognizer::AsyncWorker(uv_work_t* request) {
