@@ -24,7 +24,7 @@ io.on('connection', function(socket) {
 	sphinx.start();
 
 	socket.on('audio', function(data) {
-		sphinx.write(PocketSphinx.fromFloat(data));
+		sphinx.write(sphinx.fromFloat(data));
 	});
 
 	socket.on('restart', function() {

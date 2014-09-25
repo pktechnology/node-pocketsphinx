@@ -18,7 +18,7 @@ void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   tpl->SetClassName(String::NewSymbol("Recognizer"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
-  tpl->InstanceTemplate()->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
 
   tpl->PrototypeTemplate()->Set(String::NewSymbol("start"), FunctionTemplate::New(Start)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("stop"), FunctionTemplate::New(Stop)->GetFunction());
