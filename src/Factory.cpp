@@ -8,5 +8,5 @@ extern "C" {
 		Recognizer::Init(exports, module);
 	}
 
-	NODE_MODULE(addon, InitAll);
+	NODE_MODULE(PocketSphinx, InitAll);
 }

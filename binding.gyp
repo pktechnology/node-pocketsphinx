@@ -1,7 +1,7 @@
 {
   "targets": [
     {
-      "target_name": "recognizer",
+      "target_name": "PocketSphinx",
       "cflags": ["<!(pkg-config --cflags pocketsphinx sphinxbase)"],
 	    "ldflags": ["<!(pkg-config --libs pocketsphinx sphinxbase)"],
 	    "xcode_settings": {
