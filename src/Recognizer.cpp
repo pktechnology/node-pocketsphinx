@@ -11,6 +11,8 @@ Recognizer::~Recognizer() {
   ps_free(ps);
 }
 
+Persistent<Function> Recognizer::constructor;
+
 void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Recognizer"));
