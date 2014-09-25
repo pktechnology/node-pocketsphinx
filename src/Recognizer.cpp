@@ -23,7 +23,7 @@ void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("restart"), FunctionTemplate::New(Restart)->GetFunction());
 
   tpl->PrototypeTemplate()->Set(String::NewSymbol("addKeyphraseSearch"), FunctionTemplate::New(AddKeyphraseSearch)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("addKeywordSearch"), FunctionTemplate::New(AddKeywordSearch)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("addKeywordsSearch"), FunctionTemplate::New(AddKeywordsSearch)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("addGrammarSearch"), FunctionTemplate::New(AddGrammarSearch)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("addNgramSearch"), FunctionTemplate::New(AddNgramSearch)->GetFunction());
 
@@ -115,7 +115,7 @@ Handle<Value> Recognizer::AddKeyphraseSearch(const Arguments& args) {
   return scope.Close(args.This());
 }
 
-Handle<Value> Recognizer::AddKeywordSearch(const Arguments& args) {
+Handle<Value> Recognizer::AddKeywordsSearch(const Arguments& args) {
   HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
@@ -200,7 +200,7 @@ Handle<Value> Recognizer::SetSearch(Local<String> property, Local<Value> value, 
   HandleScope scope;
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
-  String::AsciiValue search = String::Cast(value);
+  String::AsciiValue search(value);
 
   ps_set_search(instance->ps, *search);
 
@@ -249,7 +249,7 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
   if(!args.Length()) {
-    ThrowException(Exception::TypeError("Expected a data buffer to be provided"));
+    ThrowException(Exception::TypeError(String::NewSymbol("Expected a data buffer to be provided")));
     return scope.Close(args.This());
   }
 
@@ -267,7 +267,7 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
   uv_work_t* req = new uv_work_t();
   req->data = data;
 
-  uv_queue_work(uv_default_loop(), req, AsyncWorker, AsyncAfter);
+  uv_queue_work(uv_default_loop(), req, AsyncWorker, (uv_after_work_cb)AsyncAfter);
 
   return scope.Close(args.This());
 }
