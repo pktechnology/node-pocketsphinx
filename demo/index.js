@@ -1,4 +1,4 @@
-var PocketSphinx = require('pocketsphinx'),
+var PocketSphinx = require('../'),
 	express = require('express'),
 	socket_io = require('socket.io'),
 	http = require('http');
