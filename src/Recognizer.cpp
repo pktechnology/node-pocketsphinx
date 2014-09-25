@@ -14,11 +14,11 @@ Recognizer::~Recognizer() {
 }
 
 void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
+  Local<ObjectTemplate> masterTpl = ObjectTemplate::New();
+
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Recognizer"));
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
 
   tpl->PrototypeTemplate()->Set(String::NewSymbol("start"), FunctionTemplate::New(Start)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("stop"), FunctionTemplate::New(Stop)->GetFunction());
@@ -34,7 +34,11 @@ void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   tpl->PrototypeTemplate()->Set(String::NewSymbol("write"), FunctionTemplate::New(Write)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("writeSync"), FunctionTemplate::New(WriteSync)->GetFunction());
 
-  constructor = Persistent<Function>::New(tpl->GetFunction());
+  masterTpl->SetCallAsFunctionHandler(tpl->GetFunction());
+  masterTpl->Set(String::NewSymbol("fromFloat"), FunctionTemplate::New(FromFloat)->GetFunction());
+  masterTpl->Set(String::NewSymbol("modelDirectory"), String::NewSymbol(MODELDIR));
+
+  constructor = Persistent<Object>::New(masterTpl->NewInstance());
   module->Set(String::NewSymbol("exports"), constructor);
 }
 

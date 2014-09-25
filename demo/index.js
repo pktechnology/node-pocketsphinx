@@ -26,7 +26,7 @@ io.on('connection', function(socket) {
 	socket.emit('ready');
 
 	socket.on('audio', function(data) {
-		var resampled = sphinx.fromFloat(data);
+		var resampled = PocketSphinx.fromFloat(data);
 		sphinx.writeSync(resampled);
 	});
 
