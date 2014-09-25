@@ -132,7 +132,7 @@ Handle<Value> Recognizer::AddKeywordsSearch(const Arguments& args) {
   String::AsciiValue name(args[0]);
   String::AsciiValue file(args[1]);
 
-  int result = ps_set_keyword(instance->ps, *name, *file);
+  int result = ps_set_kws(instance->ps, *name, *file);
   if(!result)
     ThrowException(Exception::Error(String::New("Failed to add keywords search to recognizer")));
 
