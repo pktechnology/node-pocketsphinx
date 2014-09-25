@@ -294,7 +294,7 @@ Handle<Value> Recognizer::WriteSync(const Arguments& args) {
   int32 score;
   const char* hyp = ps_get_hyp(instance->ps, &score, &uttid);
 
-  Handle<Value> argv[4] = { Undefined(), String::NewSymbol(hyp), NumberObject::New(score), String::NewSymbol(uttid) };
+  Handle<Value> argv[4] = { Null(), hyp ? String::NewSymbol(hyp) : Null(), NumberObject::New(score), uttid ? String::NewSymbol(uttid) : Null() };
   instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
 
   return scope.Close(args.This());
@@ -325,7 +325,7 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
     Handle<Value> argv[1] = { data->exception };
     data->instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
   } else {
-    Handle<Value> argv[4] = { Undefined(), String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
+    Handle<Value> argv[4] = { Null(), data->hyp ? String::NewSymbol(data->hyp) : Null(), NumberObject::New(data->score), data->uttid ? String::NewSymbol(data->uttid) : Null() };
     data->instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
   }
 }
