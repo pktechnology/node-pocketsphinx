@@ -49,7 +49,7 @@ typedef struct AsyncData {
   Recognizer* instance;
   v8::Handle<v8::Value> exception;
   bool hasException;
-  float* data;
+  int16* data;
   size_t length;
   const char* uttid;
   int32 score;

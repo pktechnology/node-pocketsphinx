@@ -269,7 +269,7 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
 void Recognizer::AsyncWorker(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
 
-  if(ps_process_raw(data->instance->ps, data->length, data->length, FALSE, FALSE)) {
+  if(ps_process_raw(data->instance->ps, data->data, data->length, FALSE, FALSE)) {
     data->hasException = TRUE;
     data->exception = Exception::Error(String::NewSymbol("Failed to process audio data"));
     return;
@@ -316,7 +316,7 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
 
   float* data = reinterpret_cast<float*>(node::Buffer::Data(args[0]));
   size_t length = node::Buffer::Length(args[0]) / sizeof(float);
-  int16 downsampled = new int16[length];
+  int16* downsampled = new int16[length];
 
   for(size_t i = 0; i < length; i++)
     downsampled[i] = data[i] * 32768;
