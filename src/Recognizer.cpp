@@ -286,7 +286,8 @@ Handle<Value> Recognizer::WriteSync(const Arguments& args) {
   size_t length = node::Buffer::Length(args[0]) / sizeof(int16);
 
   if(ps_process_raw(instance->ps, data, length, FALSE, FALSE)) {
-    ThrowException(Exception::Error(String::NewSymbol("Failed to process audio data")));
+    Handle<Value> argv[1] = { Exception::Error(String::NewSymbol("Failed to process audio data")) };
+    instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
     return scope.Close(args.This());
   }
 
