@@ -189,7 +189,7 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
 
 Handle<Value> Recognizer::GetSearch(const Local<String> property, const AccessorInfo& info) {
   HandleScope scope;
-  Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
+  Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(info.This());
 
   Local<Value> search = String::NewSymbol(ps_get_search(instance->ps));
 
@@ -198,7 +198,7 @@ Handle<Value> Recognizer::GetSearch(const Local<String> property, const Accessor
 
 void Recognizer::SetSearch(Local<String> property, Local<Value> value, const AccessorInfo& info) {
   HandleScope scope;
-  Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
+  Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(info.This());
 
   String::AsciiValue search(value);
 
