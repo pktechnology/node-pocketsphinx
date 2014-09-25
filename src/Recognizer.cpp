@@ -32,6 +32,7 @@ void Recognizer::Init(Handle<Object> exports, Handle<Object> module) {
   tpl->PrototypeTemplate()->SetAccessor(String::NewSymbol("search"), GetSearch, SetSearch);
 
   tpl->PrototypeTemplate()->Set(String::NewSymbol("write"), FunctionTemplate::New(Write)->GetFunction());
+  tpl->PrototypeTemplate()->Set(String::NewSymbol("writeSync"), FunctionTemplate::New(WriteSync)->GetFunction());
 
   constructor = Persistent<Function>::New(tpl->GetFunction());
   module->Set(String::NewSymbol("exports"), constructor);
@@ -266,6 +267,39 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
   return args.This();
 }
 
+Handle<Value> Recognizer::WriteSync(const Arguments& args) {
+  HandleScope scope;
+  Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
+
+  if(!args.Length()) {
+    ThrowException(Exception::TypeError(String::NewSymbol("Expected a data buffer to be provided")));
+    return args.This();
+  }
+
+  if(!node::Buffer::HasInstance(args[0])) {
+    Local<Value> argv[1] = { Exception::Error(String::NewSymbol("Expected data to be a buffer")) };
+    instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
+    return args.This();
+  }
+
+  int16* data = (int16*) node::Buffer::Data(args[0]);
+  size_t length = node::Buffer::Length(args[0]) / sizeof(int16);
+
+  if(ps_process_raw(data->instance->ps, data->data, data->length, FALSE, FALSE)) {
+    ThrowException(Exception::Error(String::NewSymbol("Failed to process audio data")));
+    return scope.Close(args.This());
+  }
+
+  const char* uttid;
+  int32 score;
+  const char* hyp = ps_get_hyp(data->instance->ps, &score, &uttid);
+
+  Handle<Value> argv[4] = { Undefined(), String::NewSymbol(hyp), NumberObject::New(score), String::NewSymbol(uttid) };
+  instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
+
+  return scope.Close(args.This());
+}
+
 void Recognizer::AsyncWorker(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
 
@@ -319,6 +353,8 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
 
   node::Buffer *slowBuffer = node::Buffer::New(length * sizeof(int16));
   int16* slowBufferData = reinterpret_cast<int16*>(node::Buffer::Data(slowBuffer));
+
+  return scope.Close(args[0]);
 
   for(size_t i = 0; i < length; i++)
     slowBufferData[i] = data[i] * 32768;

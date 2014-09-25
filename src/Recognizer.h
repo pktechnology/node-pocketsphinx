@@ -24,6 +24,7 @@ private:
 	static v8::Handle<v8::Value> Restart(const v8::Arguments& args);
 
 	static v8::Handle<v8::Value> Write(const v8::Arguments& args);
+	static v8::Handle<v8::Value> WriteSync(const v8::Arguments& args);
 
 	static v8::Handle<v8::Value> AddKeyphraseSearch(const v8::Arguments& args);
 	static v8::Handle<v8::Value> AddKeywordsSearch(const v8::Arguments& args);

@@ -27,7 +27,7 @@ io.on('connection', function(socket) {
 		console.log('Resampling Data');
 		var resampled = sphinx.fromFloat(data);
 		console.log('Recognizing Data');
-		sphinx.write(resampled);
+		sphinx.writeSync(resampled);
 	});
 
 	socket.on('restart', function() {
