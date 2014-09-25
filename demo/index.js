@@ -20,12 +20,9 @@ io.on('connection', function(socket) {
 		socket.emit('utterance', { phrase: hypothesis, id: id, score: score });
 	});
 
-	console.log('Starting Sphinx');
 	sphinx.start();
-	console.log('Sphinx Started');
 
 	socket.on('audio', function(data) {
-		console.log('Writing data to Sphinx');
 		sphinx.write(data);
 	});
 
