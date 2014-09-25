@@ -3,8 +3,6 @@
 
 using namespace v8;
 
-Persistent<Function> Recognizer::constructor;
-
 Recognizer::Recognizer() {
 
 }
