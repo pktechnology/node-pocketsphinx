@@ -15,11 +15,14 @@ var server = http.Server(app),
 
 io.on('connection', function(socket) {
 	var sphinx = new PocketSphinx({
-
+		samprate: '16000'
 	}, function(err, hypothesis, score, id) {
 		if(err) console.error(err);
 		socket.emit('utterance', { phrase: hypothesis, id: id, score: score });
 	});
+
+	sphinx.addGrammarSearch('digits', __dirname + '/digits.gram');
+	sphinx.search = 'digits';
 
 	sphinx.start();
 
