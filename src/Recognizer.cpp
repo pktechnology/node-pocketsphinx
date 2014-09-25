@@ -242,13 +242,13 @@ Handle<Value> Recognizer::Write(const Arguments& args) {
 
   if(!args.Length()) {
     ThrowException(Exception::TypeError(String::NewSymbol("Expected a data buffer to be provided")));
-    return scope.Close(args.This());
+    return args.This();
   }
 
   if(!node::Buffer::HasInstance(args[0])) {
     Local<Value> argv[1] = { Exception::Error(String::New("Expected data to be a buffer")) };
     instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
-    return scope.Close(args.This());
+    return args.This();
   }
 
   AsyncData* data = new AsyncData();
