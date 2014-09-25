@@ -271,7 +271,9 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
   for(size_t i = 0; i < data->length; i++) downsampled[i] = data->data[i] * 32768;
 
   if(ps_process_raw(data->instance->ps, downsampled, NULL, -1)) {
-    data->exception = Exception::Error(String::NewSymbol("Failed to process audio data"));
+    data->hasException = TRUE;
+    data->exception = Persistent<Value>::New(Exception::Error(String::NewSymbol("Failed to process audio data")));
+    data->exception.MakeWeak();
     delete [] downsampled;
     return;
   }
@@ -290,7 +292,7 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
 void Recognizer::AsyncAfter(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
 
-  if(data->exception) {
+  if(data->hasException) {
     Local<Value> argv[1] = { data->exception };
     data->instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
   } else {
