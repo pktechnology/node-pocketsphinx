@@ -272,7 +272,7 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
 
   if(ps_process_raw(data->instance->ps, downsampled, data->length, FALSE, FALSE)) {
     data->hasException = TRUE;
-    data->exception = Persistent<Value>::New(Isolate::GetCurrent(), Exception::Error(String::NewSymbol("Failed to process audio data")));
+    data->exception = Persistent<Value>::New(Exception::Error(String::NewSymbol("Failed to process audio data")));
     delete [] downsampled;
     return;
   }
@@ -292,11 +292,11 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
   AsyncData* data = reinterpret_cast<AsyncData*>(request->data);
 
   if(data->hasException) {
-    Local<Value> argv[1] = { Local<Value>::New(Isolate::GetCurrent(), data->exception) };
-    data->exception.Release();
+    Local<Value> argv[1] = { Local<Value>::New(data->exception) };
+    data->exception.Reset();
     data->instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
   } else {
-    Local<Value> argv[4] = { Local<Value>::New(Isolate::GetCurrent(), Undefined()), String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
+    Local<Value> argv[4] = { Local<Value>::New(Undefined()), String::NewSymbol(data->hyp), NumberObject::New(data->score), String::NewSymbol(data->uttid) };
     data->instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
   }
 }
