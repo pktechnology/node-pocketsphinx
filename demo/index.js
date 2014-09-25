@@ -24,7 +24,10 @@ io.on('connection', function(socket) {
 	sphinx.start();
 
 	socket.on('audio', function(data) {
-		sphinx.write(sphinx.fromFloat(data));
+		console.log('Resampling Data');
+		sphinx.fromFloat(data);
+		console.log('Recognizing Data');
+		sphinx.write(data);
 	});
 
 	socket.on('restart', function() {

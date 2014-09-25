@@ -301,7 +301,7 @@ Local<Value> Recognizer::Default(Local<Value> value, Local<Value> fallback) {
   return value;
 }
 
-Handle<Value> Recognizer::FromFloat(const Arguments& args) {
+void Recognizer::FromFloat(const Arguments& args) {
   HandleScope scope;
 
   if(!args.Length()) {
@@ -316,14 +316,12 @@ Handle<Value> Recognizer::FromFloat(const Arguments& args) {
 
   float* data = reinterpret_cast<float*>(node::Buffer::Data(args[0]));
   size_t length = node::Buffer::Length(args[0]) / sizeof(float);
-  int16* downsampled = new int16[length];
-
-  for(size_t i = 0; i < length; i++)
-    downsampled[i] = data[i] * 32768;
 
   node::Buffer *slowBuffer = node::Buffer::New(length);
-  memcpy(node::Buffer::Data(slowBuffer), downsampled, length * sizeof(int16));
+  int16* slowBufferData = reinterpret_cast<int16*>(node::Buffer::Data(slowBuffer));
 
+  for(size_t i = 0; i < length; i++)
+    slowBufferData[i] = data[i] * 32768;
 
   // Courtesy of http://sambro.is-super-awesome.com/2011/03/03/creating-a-proper-buffer-in-a-node-c-addon/
   Local<Object> globalObj = Context::GetCurrent()->Global();
