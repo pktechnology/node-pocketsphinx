@@ -18,7 +18,8 @@
           var socket = io.connect(window.location.origin);
 
           socket.on('utterance', function(data) {
-            document.getElementById('output').innerHtml = data.phrase;
+            var element = document.getElementById('output');
+            element.innerHTML = data.phrase;
           });
 
           var buffer = context.createBuffer(1, 2048, 16000);
