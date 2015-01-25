@@ -212,7 +212,7 @@ void Recognizer::SetSearch(Local<String> property, Local<Value> value, const Acc
 Handle<Value> Recognizer::Start(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
-  int result = ps_start_utt(instance->ps, NULL);
+  int result = ps_start_utt(instance->ps);
   if(result)
     ThrowException(Exception::Error(String::New("Failed to start PocketSphinx processing")));
 
@@ -232,7 +232,7 @@ Handle<Value> Recognizer::Stop(const Arguments& args) {
 Handle<Value> Recognizer::Restart(const Arguments& args) {
   Recognizer* instance = node::ObjectWrap::Unwrap<Recognizer>(args.This());
 
-  int result = ps_start_utt(instance->ps, NULL);
+  int result = ps_start_utt(instance->ps);
   if(result)
     ThrowException(Exception::Error(String::New("Failed to start PocketSphinx processing")));
   
@@ -294,12 +294,11 @@ Handle<Value> Recognizer::WriteSync(const Arguments& args) {
     return scope.Close(args.This());
   }
 
-  const char* uttid;
   int32 score;
-  const char* hyp = ps_get_hyp(instance->ps, &score, &uttid);
+  const char* hyp = ps_get_hyp(instance->ps, &score);
 
-  Handle<Value> argv[4] = { Null(), hyp ? String::NewSymbol(hyp) : Null(), NumberObject::New(score), uttid ? String::NewSymbol(uttid) : Null() };
-  instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
+  Handle<Value> argv[3] = { Null(), hyp ? String::NewSymbol(hyp) : Null(), NumberObject::New(score)};
+  instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
 
   return scope.Close(args.This());
 }
@@ -313,12 +312,10 @@ void Recognizer::AsyncWorker(uv_work_t* request) {
     return;
   }
   
-  const char* uttid;
   int32 score;
-  const char* hyp = ps_get_hyp(data->instance->ps, &score, &uttid);
+  const char* hyp = ps_get_hyp(data->instance->ps, &score);
 
   data->score = score;
-  data->uttid = uttid;
   data->hyp = hyp;
 }
 
@@ -329,8 +326,8 @@ void Recognizer::AsyncAfter(uv_work_t* request) {
     Handle<Value> argv[1] = { data->exception };
     data->instance->callback->Call(Context::GetCurrent()->Global(), 1, argv);
   } else {
-    Handle<Value> argv[4] = { Null(), data->hyp ? String::NewSymbol(data->hyp) : Null(), NumberObject::New(data->score), data->uttid ? String::NewSymbol(data->uttid) : Null() };
-    data->instance->callback->Call(Context::GetCurrent()->Global(), 4, argv);
+    Handle<Value> argv[3] = { Null(), data->hyp ? String::NewSymbol(data->hyp) : Null(), NumberObject::New(data->score)};
+    data->instance->callback->Call(Context::GetCurrent()->Global(), 3, argv);
   }
 }
 

@@ -16,9 +16,9 @@ var server = http.Server(app),
 io.on('connection', function(socket) {
 	var sphinx = new PocketSphinx({
 		samprate: '16000'
-	}, function(err, hypothesis, score, id) {
+	}, function(err, hypothesis, score) {
 		if(err) console.error(err);
-		socket.emit('utterance', { phrase: hypothesis, id: id, score: score });
+		socket.emit('utterance', { phrase: hypothesis, score: score });
 	});
 
 	sphinx.addGrammarSearch('digits', __dirname + '/digits.gram');

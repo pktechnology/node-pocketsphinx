@@ -14,7 +14,7 @@ var ps = new PocketSphinx({
 	dict: '/file/path',
 	samprate: 16000,
 	nfft: 512
-}, function(err, hypothesis, score, utterance_id) {
+}, function(err, hypothesis, score) {
 
 });
 

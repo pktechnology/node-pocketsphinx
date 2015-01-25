@@ -52,7 +52,6 @@ typedef struct AsyncData {
   bool hasException;
   int16* data;
   size_t length;
-  const char* uttid;
   int32 score;
   const char* hyp;
 } AsyncData;
