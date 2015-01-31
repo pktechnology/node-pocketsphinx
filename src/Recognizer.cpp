@@ -71,21 +71,15 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   instance->callback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
   String::AsciiValue hmmValue(Default(options->Get(String::NewSymbol("hmm")), String::NewSymbol(MODELDIR "/en-us/en-us")));
-  String::AsciiValue lmValue(Default(options->Get(String::NewSymbol("lm")), String::NewSymbol(MODELDIR "/en-us/en-us.lm.dmp")));
   String::AsciiValue dictValue(Default(options->Get(String::NewSymbol("dict")), String::NewSymbol(MODELDIR "/en-us/cmudict-en-us.dict")));
   String::AsciiValue samprateValue(Default(options->Get(String::NewSymbol("samprate")), String::NewSymbol("44100")));
   String::AsciiValue nfftValue(Default(options->Get(String::NewSymbol("nfft")), String::NewSymbol("2048")));
-  String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
-  String::AsciiValue logfnValue(Default(options->Get(String::NewSymbol("logfn")), String::NewSymbol("/dev/null")));
 
   cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
     "-hmm", *hmmValue,
-    "-lm", *lmValue,
     "-dict", *dictValue,
     "-samprate", *samprateValue,
     "-nfft", *nfftValue,
-    //"-kws_threshold", *kws_thresholdValue,
-    //"-logfn", *logfnValue,
     NULL);
 
   instance->ps = ps_init(config);
