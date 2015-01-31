@@ -70,14 +70,13 @@ Handle<Value> Recognizer::New(const Arguments& args) {
   Handle<Object> options = args[0]->ToObject();
   instance->callback = Persistent<Function>::New(Local<Function>::Cast(args[1]));
 
-  String::AsciiValue hmmValue(Default(options->Get(String::NewSymbol("hmm")), String::NewSymbol(MODELDIR "/hmm/en_US/hub4wsj_sc_8k")));
-  String::AsciiValue lmValue(Default(options->Get(String::NewSymbol("lm")), String::NewSymbol(MODELDIR "/lm/en_US/hub4.5000.DMP")));
-  String::AsciiValue dictValue(Default(options->Get(String::NewSymbol("dict")), String::NewSymbol(MODELDIR "/lm/en_US/cmu07a.dic")));
+  String::AsciiValue hmmValue(Default(options->Get(String::NewSymbol("hmm")), String::NewSymbol(MODELDIR "/en-us/en-us")));
+  String::AsciiValue lmValue(Default(options->Get(String::NewSymbol("lm")), String::NewSymbol(MODELDIR "/en-us/en-us.lm.dmp")));
+  String::AsciiValue dictValue(Default(options->Get(String::NewSymbol("dict")), String::NewSymbol(MODELDIR "/en-us/cmudict-en-us.dict")));
   String::AsciiValue samprateValue(Default(options->Get(String::NewSymbol("samprate")), String::NewSymbol("44100")));
   String::AsciiValue nfftValue(Default(options->Get(String::NewSymbol("nfft")), String::NewSymbol("2048")));
   String::AsciiValue kws_thresholdValue(options->Get(String::NewSymbol("kws_threshold")));
   String::AsciiValue logfnValue(Default(options->Get(String::NewSymbol("logfn")), String::NewSymbol("/dev/null")));
-  String::AsciiValue mmapValue(options->Get(String::NewSymbol("mmap")));
 
   cmd_ln_t* config = cmd_ln_init(NULL, ps_args(), TRUE,
     "-hmm", *hmmValue,
@@ -87,7 +86,6 @@ Handle<Value> Recognizer::New(const Arguments& args) {
     "-nfft", *nfftValue,
     //"-kws_threshold", *kws_thresholdValue,
     //"-logfn", *logfnValue,
-    //"-mmap", *mmapValue,
     NULL);
 
   instance->ps = ps_init(config);
