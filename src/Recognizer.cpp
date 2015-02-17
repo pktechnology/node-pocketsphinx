@@ -107,7 +107,7 @@ Handle<Value> Recognizer::AddKeyphraseSearch(const Arguments& args) {
   String::AsciiValue keyphrase(args[1]);
 
   int result = ps_set_keyphrase(instance->ps, *name, *keyphrase);
-  if(!result)
+  if(result < 0)
     ThrowException(Exception::Error(String::NewSymbol("Failed to add keyphrase search to recognizer")));
 
   return scope.Close(args.This());
@@ -131,7 +131,7 @@ Handle<Value> Recognizer::AddKeywordsSearch(const Arguments& args) {
   String::AsciiValue file(args[1]);
 
   int result = ps_set_kws(instance->ps, *name, *file);
-  if(!result)
+  if(result < 0)
     ThrowException(Exception::Error(String::New("Failed to add keywords search to recognizer")));
 
   return scope.Close(args.This());
@@ -155,7 +155,7 @@ Handle<Value> Recognizer::AddGrammarSearch(const Arguments& args) {
   String::AsciiValue file(args[1]);
 
   int result = ps_set_jsgf_file(instance->ps, *name, *file);
-  if(!result)
+  if(result < 0)
     ThrowException(Exception::Error(String::New("Failed to add grammar search to recognizer")));
 
   return scope.Close(args.This());
@@ -179,7 +179,7 @@ Handle<Value> Recognizer::AddNgramSearch(const Arguments& args) {
   String::AsciiValue file(args[1]);
 
   int result = ps_set_lm_file(instance->ps, *name, *file);
-  if(!result)
+  if(result < 0)
     ThrowException(Exception::Error(String::New("Failed to add Ngram search to recognizer")));
 
   return scope.Close(args.This());
