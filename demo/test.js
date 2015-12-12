@@ -1,12 +1,3 @@
-# PocketSphinx for Node.js
-**A Node.js Binding for PocketSphinx**
-
-This module aims to allow basic speech recognition on portable devices
-through the use of PocketSphinx.
-
-## Example
-
-```javascript
 var fs = require('fs');
 
 var ps = require('pocketsphinx');
@@ -26,4 +17,3 @@ fs.readFile("../../pocketsphinx/test/data/goforward.raw", function(err, data) {
     decoder.endUtt();
     console.log(decoder.hyp())
 });
-```
