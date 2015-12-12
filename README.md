@@ -9,15 +9,15 @@ through the use of PocketSphinx.
 ```javascript
 var fs = require('fs');
 
-var ps = require('pocketsphinx');
+var ps = require('pocketsphinx').ps;
 
 modeldir = "../../pocketsphinx/model/en-us/"
 
-var config = new ps.ps.Decoder.defaultConfig();
+var config = new ps.Decoder.defaultConfig();
 config.setString("-hmm", modeldir + "en-us");
 config.setString("-dict", modeldir + "cmudict-en-us.dict");
 config.setString("-lm", modeldir + "en-us.lm.bin");
-var decoder = new ps.ps.Decoder(config);
+var decoder = new ps.Decoder(config);
 
 fs.readFile("../../pocketsphinx/test/data/goforward.raw", function(err, data) {
     if (err) throw err;
