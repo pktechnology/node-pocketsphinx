@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-var ps = require('pocketsphinx').ps;
+var ps = require('..').ps;
 
 modeldir = "../../pocketsphinx/model/en-us/"
 
@@ -16,4 +16,10 @@ fs.readFile("../../pocketsphinx/test/data/goforward.raw", function(err, data) {
     decoder.processRaw(data, false, false);
     decoder.endUtt();
     console.log(decoder.hyp())
+
+    it = decoder.seg().iter()
+    while ((seg = it.next()) != null) {
+        console.log(seg.word, seg.startFrame, seg.endFrame);
+    }
 });
+
