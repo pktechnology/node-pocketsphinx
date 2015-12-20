@@ -27,7 +27,7 @@
        ]
     },
     {
-      "target_name": "Pocketsphinx",
+      "target_name": "PocketSphinx",
       "cflags": ["<!(pkg-config --cflags pocketsphinx)"],
       "libraries": ["<!(pkg-config --libs pocketsphinx)"],
       "xcode_settings": {
