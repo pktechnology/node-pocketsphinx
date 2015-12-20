@@ -1,8 +1,19 @@
 # PocketSphinx for Node.js
-**A Node.js Binding for PocketSphinx**
 
 This module aims to allow basic speech recognition on portable devices
 through the use of PocketSphinx.
+
+## Installation
+
+To build this module you need to have following dependencies:
+
+  * sphinxbase latest from github
+  * pocketsphinx latest from github
+  * swig 3.0
+  * pkg-config
+  
+To build simply use npm install, it should detect everything automatically. Carefully read
+build logs in order to see if there are any issues.
 
 ## Example
 
