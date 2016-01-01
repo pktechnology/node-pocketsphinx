@@ -11,6 +11,17 @@
       "sources" : ["wrap_sb.cpp"],
       "actions": [
          {
+            "action_name": "check_pkg_config",
+            "message": "Checking for sphinxbase and pocketsphinx version 5prealpha with pkg-config",
+            "inputs": [],
+            "outputs": [""],
+            "action": [
+               "eval",
+               "pkg-config --atleast-version=5prealpha pocketsphinx"
+               " sphinxbase || (echo Please make sure you have pocketsphinx and sphinxbase installed && exit 1)"
+            ]
+         },
+         {
             "action_name": "swig_sb",
             "inputs": ["<!(pkg-config --variable=datadir sphinxbase)" "/swig/sphinxbase.i"],
             "outputs": [ "sb.cpp" ],
@@ -23,11 +34,12 @@
                "-o", "sb.cpp",
                "<!(pkg-config --variable=datadir sphinxbase)" "/swig/sphinxbase.i"
             ]
-         }
+         },
        ]
     },
     {
       "target_name": "PocketSphinx",
+      "dependencies": ["SphinxBase"],
       "cflags": ["<!(pkg-config --cflags pocketsphinx)"],
       "libraries": ["<!(pkg-config --libs pocketsphinx)"],
       "xcode_settings": {
