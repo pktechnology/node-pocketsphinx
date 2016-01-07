@@ -6,7 +6,8 @@ through the use of PocketSphinx.
 ## Installation
 
 To build this module you need to have following dependencies:
-
+  
+  * node at least 4.2
   * sphinxbase latest from github
   * pocketsphinx latest from github
   * swig 3.0
