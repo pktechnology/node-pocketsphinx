@@ -1,16 +1,12 @@
 {
   "name": "pocketsphinx",
-  "version": "5.0.3",
+  "version": "5.0.5",
   "description": "Node binding for continuous voice recoginition through pocketsphinx.",
   "repository": {
     "type": "git",
     "url": "git://github.com/cmusphinx/node-pocketsphinx.git"
   },
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "node-gyp -v rebuild"
-  },
   "keywords": [
     "pocketsphinx",
     "cmusphinx",
@@ -20,5 +16,6 @@
   ],
   "author": "Alpha Cephei Inc.",
   "license": "BSD-2-Clause",
-  "gypfile": true
+  "gypfile": true,
+  "engines": { "node" : ">=4.2.x" }
 }
