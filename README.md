@@ -10,7 +10,7 @@ To build this module you need to have following dependencies:
   * node at least 4.2
   * sphinxbase latest from github
   * pocketsphinx latest from github
-  * swig 3.0
+  * swig at least 3.0.7
   * pkg-config
 
 Make sure that PKG_CONFIG_PATH includes the folder where you installed pocketsphinx, for example, if you installed with default prefix, export PKG_CONFIG_PATH:
