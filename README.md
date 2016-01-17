@@ -12,7 +12,16 @@ To build this module you need to have following dependencies:
   * pocketsphinx latest from github
   * swig 3.0
   * pkg-config
-  
+
+Make sure that PKG_CONFIG_PATH includes the folder where you installed pocketsphinx, for example, if you installed with default prefix, export PKG_CONFIG_PATH:
+
+     export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+
+You can test installation with 
+
+     pkg-config --modversion pocketsphinx // This should print the version
+     pocketsphinx_continuous -inmic yes  // This should recognize audio from microphone
+
 To build simply use npm install, it should detect everything automatically. Carefully read
 build logs in order to see if there are any issues.
 
