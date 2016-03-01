@@ -5,9 +5,13 @@ through the use of PocketSphinx.
 
 ## Installation
 
+Windows installation is not supported yet.
+
 To build this module you need to have following dependencies:
   
   * node at least 4.2
+  * cmake at least version 3.1
+  * cmake-js https://github.com/cmake-js/cmake-js (install with `npm install -g cmake-js`) 
   * sphinxbase latest from github
   * pocketsphinx latest from github
   * swig at least 3.0.7
@@ -21,6 +25,10 @@ You can test installation with
 
      pkg-config --modversion pocketsphinx // This should print the version
      pocketsphinx_continuous -inmic yes  // This should recognize audio from microphone
+
+Make sure that pocketsphinx is installed properly, adjust LD_LIBRARY_PATH if libraries are not found. You can test pocketsphinx with
+
+     pocketsphinx_continuous -infile goforward.raw
 
 To build simply use npm install, it should detect everything automatically. Carefully read
 build logs in order to see if there are any issues.

@@ -1,6 +1,6 @@
 {
   "name": "pocketsphinx",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "description": "Node binding for continuous voice recoginition through pocketsphinx.",
   "repository": {
     "type": "git",
@@ -16,6 +16,11 @@
   ],
   "author": "Alpha Cephei Inc.",
   "license": "BSD-2-Clause",
-  "gypfile": true,
-  "engines": { "node" : ">=4.2.x" }
+  "engines": { "node" : ">=4.2.x" },
+  "devDependencies": {
+    "cmake-js": "^3.1.2"
+  },
+  "scripts": {
+    "install": "cmake-js compile"
+  }
 }
