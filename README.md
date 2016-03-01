@@ -17,6 +17,10 @@ To build this module you need to have following dependencies:
   * swig at least 3.0.7
   * pkg-config
 
+Make sure that pocketsphinx is installed properly, adjust LD_LIBRARY_PATH if libraries are not found. You can test pocketsphinx with
+
+     pocketsphinx_continuous -infile goforward.raw // Recognize goforward.raw file
+
 Make sure that PKG_CONFIG_PATH includes the folder where you installed pocketsphinx, for example, if you installed with default prefix, export PKG_CONFIG_PATH:
 
      export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
@@ -24,11 +28,6 @@ Make sure that PKG_CONFIG_PATH includes the folder where you installed pocketsph
 You can test installation with 
 
      pkg-config --modversion pocketsphinx // This should print the version
-     pocketsphinx_continuous -inmic yes  // This should recognize audio from microphone
-
-Make sure that pocketsphinx is installed properly, adjust LD_LIBRARY_PATH if libraries are not found. You can test pocketsphinx with
-
-     pocketsphinx_continuous -infile goforward.raw
 
 To build simply use npm install, it should detect everything automatically. Carefully read
 build logs in order to see if there are any issues.
