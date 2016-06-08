@@ -21,5 +21,10 @@ fs.readFile("../../pocketsphinx/test/data/goforward.raw", function(err, data) {
     while ((seg = it.next()) != null) {
         console.log(seg.word, seg.startFrame, seg.endFrame);
     }
+    
+    it = decoder.nbest().iter()
+    for (i = 0; i < 10 && ((hyp = it.next()) != null); i++) {
+	console.log(hyp.hypstr)
+    }
 });
 
