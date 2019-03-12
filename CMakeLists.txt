@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
+set (CMAKE_CXX_STANDARD 11)
 
 find_package(PkgConfig)
 find_package(SWIG 3.0.7 REQUIRED)
