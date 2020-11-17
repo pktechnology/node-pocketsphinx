@@ -1,4 +1,5 @@
 project(SphinxBase)
+set (CMAKE_CXX_STANDARD 11)
 
 execute_process(COMMAND pkg-config --variable datadir sphinxbase OUTPUT_VARIABLE SB_DATADIR OUTPUT_STRIP_TRAILING_WHITESPACE)
 add_custom_command(OUTPUT "sb.cpp"
