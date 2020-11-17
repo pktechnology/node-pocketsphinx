@@ -1,4 +1,5 @@
 project(PocketSphinx)
+set (CMAKE_CXX_STANDARD 11)
 
 execute_process(COMMAND pkg-config --variable datadir sphinxbase OUTPUT_VARIABLE SB_DATADIR OUTPUT_STRIP_TRAILING_WHITESPACE)
 execute_process(COMMAND pkg-config --variable datadir pocketsphinx OUTPUT_VARIABLE PS_DATADIR OUTPUT_STRIP_TRAILING_WHITESPACE)
